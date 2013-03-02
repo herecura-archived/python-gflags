@@ -1,0 +1,15 @@
+pkgbase = python2-gflags
+	pkgdesc = Commandline flags module for Python
+	pkgver = 2.0
+	pkgrel = 1
+	url = http://code.google.com/p/python-gflags
+	arch = any
+	license = BSD
+	makedepends = python2-distribute
+	depends = python2
+	provides = python-gflags
+	source = http://python-gflags.googlecode.com/files/python-gflags-2.0.tar.gz
+	sha256sums = 311066217acb8cd8519a4c872cb3fe64f02bcf105802bb761ab0de55c2386cd6
+
+pkgname = python2-gflags
+
