@@ -2,7 +2,7 @@
 # Maintainer: BlackEagle < ike DOT devolder AT gmail DOT com >
 pkgname=python2-gflags
 pkgver=2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Commandline flags module for Python"
 arch=('any')
 url="http://code.google.com/p/python-gflags"
