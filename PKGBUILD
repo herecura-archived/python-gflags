@@ -1,28 +1,50 @@
 # $Id$
 # Maintainer: BlackEagle < ike DOT devolder AT gmail DOT com >
-pkgname=python2-gflags
-pkgver=2.0
-pkgrel=3
+pkgbase=python-gflags
+pkgname=('python-gflags' 'python2-gflags')
+pkgver=3.0.4
+pkgrel=1
 pkgdesc="Commandline flags module for Python"
 arch=('any')
-url="http://code.google.com/p/python-gflags"
+url="https://github.com/google/python-gflags"
 license=('BSD')
-depends=('python2')
-makedepends=('python2-distribute')
-provides=('python-gflags')
-source=("http://${pkgname/python2/python}.googlecode.com/files/${pkgname/python2/python}-${pkgver}.tar.gz")
-sha256sums=('311066217acb8cd8519a4c872cb3fe64f02bcf105802bb761ab0de55c2386cd6')
+makedepends=('python2-setuptools' 'python-setuptools')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/google/$pkgbase/archive/$pkgver.tar.gz")
+sha256sums=('f80e19b9d2fa492527c62e4928ff73051eee95baca85149ef4c844033e2fc370')
+
+prepare() {
+    cp -a "$pkgbase-$pkgver" "${pkgbase/python/python2}-$pkgver"
+}
 
 build() {
-	cd ${pkgname/python2/python}-${pkgver}
+    cd "$srcdir/$pkgbase-$pkgver"
+	python setup.py build
+
+	cd "$srcdir/${pkgbase/python/python2}-$pkgver"
 	python2 setup.py build
 }
 
-package() {
-	cd ${pkgname/python2/python}-${pkgver}
-	python2 setup.py install --root=${pkgdir}
-	chmod +r ${pkgdir}/* -R
+package_python-gflags() {
+    depends=('python')
+	cd "$pkgbase-$pkgver"
+	python setup.py install --root=${pkgdir}
+    chmod +x "$pkgdir/usr/bin/gflags2man.py"
+	#chmod +r ${pkgdir}/* -R
 	#install -dm755 ${pkgdir}/usr/share/licenses/${pkgname}
-	install -Dm644 AUTHORS ${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS
-	install -Dm644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/COPYING
+	install -Dm644 AUTHORS "$pkgdir/usr/share/licenses/$pkgbase/AUTHORS"
+	install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgbase/COPYING"
 }
+
+package_python2-gflags() {
+    depends=('python2')
+	cd ${pkgbase/python/python2}-${pkgver}
+    find -name "*.py" -exec sed -e 's/env python/&2/' -i {} \;
+	python2 setup.py install --root=${pkgdir}
+    mv "$pkgdir/usr/bin/gflags2man.py" "$pkgdir/usr/bin/gflags2man.py2"
+    chmod +x "$pkgdir/usr/bin/gflags2man.py2"
+	#chmod +r ${pkgdir}/* -R
+	#install -dm755 ${pkgdir}/usr/share/licenses/${pkgname}
+	install -Dm644 AUTHORS "$pkgdir/usr/share/licenses/${pkgbase/python/python2}/AUTHORS"
+	install -Dm644 COPYING "$pkgdir/usr/share/licenses/${pkgbase/python/python2}/COPYING"
+}
+
